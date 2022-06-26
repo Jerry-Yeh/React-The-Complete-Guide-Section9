@@ -15,11 +15,15 @@ const emailReducer = (prevState, action) => {
 
   return { value: "", isValid: false };
 };
+
 const passwordReducer = (prevState, action) => {
   if (action.type === "USER_INPUT") {
     return { value: action.val, isValid: action.val.trim().length > 6 };
   } else if (action.type === "INPUT_BLUR") {
-    return { value: prevState.value, isValid: prevState.value.trim().length > 6 };
+    return {
+      value: prevState.value,
+      isValid: prevState.value.trim().length > 6,
+    };
   }
 
   return { value: prevState, isValid: false };
@@ -49,19 +53,20 @@ const Login = (props) => {
   //   };
   // });
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     console.log("Checking from validity!");
-  //     setFormIsValid(
-  //       enteredEmail.includes("@") && enteredPassword.trim().trim().length > 6
-  //     );
-  //   }, 500);
+  const { isValid: emailValid } = emailState;
+  const { isValid: passwordValid } = passwordState;
 
-  //   return () => {
-  //     console.log('CLEANUP');
-  //     clearTimeout(identifier);
-  //   };
-  // }, [enteredEmail, enteredPassword]);
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log("Checking from validity!");
+      setFormIsValid(emailState.isValid && passwordState.isValid);
+    }, 500);
+
+    return () => {
+      console.log("CLEANUP");
+      clearTimeout(identifier);
+    };
+  }, [emailState.isValid, passwordState.isValid]);
 
   const emailChangeHandler = (event) => {
     // setEnteredEmail(event.target.value);
@@ -70,7 +75,7 @@ const Login = (props) => {
       val: event.target.value,
     });
 
-    setFormIsValid(event.target.value.includes('@') && passwordState.isValid);
+    setFormIsValid(event.target.value.includes("@") && passwordState.isValid);
   };
 
   const passwordChangeHandler = (event) => {
@@ -142,11 +147,7 @@ const Login = (props) => {
           />
         </div>
         <div className={classes.actions}>
-          <Button
-            type="submit"
-            className={classes.btn}
-            disabled={!formIsValid}
-          >
+          <Button type="submit" className={classes.btn} disabled={!formIsValid}>
             Login
           </Button>
         </div>
