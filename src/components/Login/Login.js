@@ -59,14 +59,14 @@ const Login = (props) => {
   useEffect(() => {
     const identifier = setTimeout(() => {
       console.log("Checking from validity!");
-      setFormIsValid(emailState.isValid && passwordState.isValid);
+      setFormIsValid(emailValid && passwordValid);
     }, 500);
 
     return () => {
       console.log("CLEANUP");
       clearTimeout(identifier);
     };
-  }, [emailState.isValid, passwordState.isValid]);
+  }, [emailValid, passwordValid]);
 
   const emailChangeHandler = (event) => {
     // setEnteredEmail(event.target.value);
